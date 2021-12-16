@@ -22,7 +22,19 @@
 
 .cell {
   background-color: tomato;
-  outline: solid 1px;
   height: 10%;
-  width: 10%;
+  width: 9.5%;
+}
+
+.top{
+  border-top: solid 1px;
+}
+.right{
+  border-right: solid 1px;
+}
+.bottom{
+  border-bottom: solid 1px;
+}
+.left{
+  border-left: solid 1px;
 }

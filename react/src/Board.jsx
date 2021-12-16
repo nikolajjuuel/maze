@@ -1,6 +1,10 @@
 function Cell(x, y) {
     this.x = x;
     this.y = y;
+    this.top = false;
+    this.right = false;
+    this.bottom = false;
+    this.left = true;
 }
 
 
@@ -22,12 +26,28 @@ export default function Board(props) {
 
     const cells = grid.map((cell) => {
         const id = i += 1;
+        const { top, right, bottom, left } = cell;
+        const borders = [];
+        if (top) {
+            borders.push('top');
+        }
+        if (right) {
+            borders.push('right');
+        }
+        if (bottom) {
+            borders.push('bottom');
+        }
+        if (left) {
+            borders.push('left');
+        }
+        const style = 'cell ' + borders.toString().replaceAll(',',' ');
+
         return (
-            <div className='cell' key = {id} x={cell.x} y={cell.y}></div>
+            <div className={style} key={id} x={cell.x} y={cell.y} 
+            style={{}}>
+            </div>
         )
     })
-
-    console.log(cells);
 
     return (
         <div className='board' style={{ height: size + 'px', width: size + 'px' }}>
