@@ -25,11 +25,11 @@ const draw = (arr) => arr.map((elms, i) => {
     if (left) {
         styles.push('left');
     }
-    if (visited){
+    if (visited) {
         styles.push('visited');
     }
 
-    const style = 'cell ' + styles.toString().replaceAll(',',' ');
+    const style = 'cell ' + styles.toString().replaceAll(',', ' ');
 
     return (
         <div className={style} key={elms.id} id={elms.id} x={elms.x} y={elms.y} ></div>
@@ -38,7 +38,16 @@ const draw = (arr) => arr.map((elms, i) => {
 
 
 
+function visited(cell) {
+    cell.visited = true;
+}
 
+function index(x, y, columns) {
+    if(x < 0 || y < 0 || x > columns - 1 || y > columns - 1){
+        return -1;
+    }
+    return x + y * columns;
+}
 
 
 
@@ -55,18 +64,39 @@ export default function Board(props) {
             grid.push(cells);
         }
     }
+    let current = grid[0];
 
-    console.log('grid', grid);
-    
-    const current = grid[0].visited = true;
+    visited(current);
 
 
-    console.log(current)
+    const checkNeighbour = (cell) => {
+        const { x, y } = cell
+        const neighbours = [];
+        const top    = grid[index(x,     y - 1, colums)];
+        const right  = grid[index(x + 1, y,     colums)];
+        const bottom = grid[index(x,     y + 1, colums)];
+        const left   = grid[index(x - 1, y,     colums)];
+
+        if(top && !top.visited){
+            neighbours.push(top);
+        }
+        if(right && !right.visited){
+            neighbours.push(right);
+        }
+        if(bottom && !bottom.visited){
+            neighbours.push(bottom);
+        }
+        if(left && !left.visited){
+            neighbours.push(left);
+        }
+
+    }
+
+
+    checkNeighbour(current)
+
+
     const cells = draw(grid);
-
-
-
-
 
     return (
         <div className='board' style={{ height: size + 'px', width: size + 'px' }}>
