@@ -46,12 +46,36 @@ function index(x, y, columns) {
     return x + y * columns;
 }
 
-let i = 0;
+function removeWalls(current, next) {
+    const x = current.x - next.x;
+    const y = current.y - next.y;
+
+    console.log('current x, next, x',current.x,  next.x);
+    console.log('x',x);
+
+    if( x === -1) {
+        current.bottom = false; 
+        next.top = false; 
+    }
+    if( x === 1) {
+        current.top = false; 
+        next.bottom = false; 
+    }
+
+    if( y === 1) {
+        current.left = false; 
+        next.right = false; 
+    }
+    if( y === -1) {
+        current.right = false; 
+        next.left = false; 
+    }
+
+};
+
 
 const checkNeighbour = (cell, grid, colums) => {
     visited(cell);
-
-    console.log('cell',cell);
 
     const { x, y } = cell
     const neighbours = [];
@@ -60,7 +84,6 @@ const checkNeighbour = (cell, grid, colums) => {
     const bottom = grid[index(y, x + 1, colums)];
     const left = grid[index(y - 1, x, colums)];
 
-    console.log('check neighbour')
 
     if (top && !top.visited) {
         neighbours.push(top);
@@ -76,11 +99,9 @@ const checkNeighbour = (cell, grid, colums) => {
     }
 
     if (neighbours.length > 0) {
-        console.log(neighbours)
         const randomNeighbour = Math.floor(Math.random() * neighbours.length);
-
+        removeWalls(cell, neighbours[randomNeighbour]);
         checkNeighbour(neighbours[randomNeighbour], grid, colums);
-
     } else {
         return undefined;
     }
@@ -90,7 +111,7 @@ const checkNeighbour = (cell, grid, colums) => {
 
 export default function Board(props) {
     const { size } = props;
-    const width = 40;
+    const width = 20;
     const colums = Math.floor(size / width);
     const rows = Math.floor(size / width);
     const grid = [];
@@ -113,3 +134,5 @@ export default function Board(props) {
         </div>
     )
 }
+
+
