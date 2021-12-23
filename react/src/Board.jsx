@@ -9,6 +9,8 @@ function Cell(x, y) {
     this.visited = false;
 }
 
+
+//set styles with css
 const draw = (arr) => arr.map((elms) => {
     const { top, right, bottom, left, visited } = elms;
     const styles = [];
@@ -35,6 +37,7 @@ const draw = (arr) => arr.map((elms) => {
     )
 })
 
+
 function visited(cell) {
     cell.visited = true;
 }
@@ -50,41 +53,39 @@ function removeWalls(current, next) {
     const x = current.x - next.x;
     const y = current.y - next.y;
 
-    console.log('current x, next, x',current.x,  next.x);
-    console.log('x',x);
-
-    if( x === -1) {
-        current.bottom = false; 
-        next.top = false; 
+    if (x === -1) {
+        current.bottom = false;
+        next.top = false;
     }
-    if( x === 1) {
-        current.top = false; 
-        next.bottom = false; 
+    if (x === 1) {
+        current.top = false;
+        next.bottom = false;
     }
 
-    if( y === 1) {
-        current.left = false; 
-        next.right = false; 
+    if (y === 1) {
+        current.left = false;
+        next.right = false;
     }
-    if( y === -1) {
-        current.right = false; 
-        next.left = false; 
+    if (y === -1) {
+        current.right = false;
+        next.left = false;
     }
 
 };
 
+const stack = [];
 
 const checkNeighbour = (cell, grid, colums) => {
     visited(cell);
-
+    
     const { x, y } = cell
     const neighbours = [];
     const top = grid[index(y, x - 1, colums)];
     const right = grid[index(y + 1, x, colums)];
     const bottom = grid[index(y, x + 1, colums)];
     const left = grid[index(y - 1, x, colums)];
-
-
+    
+    
     if (top && !top.visited) {
         neighbours.push(top);
     }
@@ -97,12 +98,17 @@ const checkNeighbour = (cell, grid, colums) => {
     if (left && !left.visited) {
         neighbours.push(left);
     }
-
+    
     if (neighbours.length > 0) {
         const randomNeighbour = Math.floor(Math.random() * neighbours.length);
+        
+        stack.push(cell);
         removeWalls(cell, neighbours[randomNeighbour]);
         checkNeighbour(neighbours[randomNeighbour], grid, colums);
-    } else {
+    } else if (stack.length > 0) {
+        checkNeighbour(stack.pop(), grid, colums);
+    }
+    else {
         return undefined;
     }
 }
@@ -111,7 +117,7 @@ const checkNeighbour = (cell, grid, colums) => {
 
 export default function Board(props) {
     const { size } = props;
-    const width = 20;
+    const width = 40;
     const colums = Math.floor(size / width);
     const rows = Math.floor(size / width);
     const grid = [];
